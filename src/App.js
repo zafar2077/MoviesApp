@@ -247,13 +247,17 @@ function App() {
               }}
             ></input>
           </div>
-          <button
-            onClick={() => {
-              handleAdd();
-            }}
-          >
-            Add
-          </button>
+          <div>
+            <button onClick={closeModal}>Cancel</button>
+            <button
+              style={{ marginLeft: "20px" }}
+              onClick={() => {
+                handleAdd();
+              }}
+            >
+              Add
+            </button>
+          </div>
         </div>
       </Modal>
       {!checkValue ? (
@@ -275,16 +279,19 @@ function App() {
                 }}
               ></input>
             </span>
-            <button
-              onClick={() => {
-                closeDeleteModal();
-                setDeleteId(tempId);
-                setCheckValue(rememberUser);
-              }}
-              style={{ marginTop: "20px" }}
-            >
-              Confirm
-            </button>
+            <div>
+              <button onClick={closeDeleteModal}>Cancel</button>
+              <button
+                onClick={() => {
+                  closeDeleteModal();
+                  setDeleteId(tempId);
+                  setCheckValue(rememberUser);
+                }}
+                style={{ marginTop: "20px", marginLeft: "20px" }}
+              >
+                Confirm
+              </button>
+            </div>
           </div>
         </Modal>
       ) : (
