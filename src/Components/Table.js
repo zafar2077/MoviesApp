@@ -67,6 +67,13 @@ export default function Table(props) {
                 return (
                   <th
                     onClick={() => {
+                      if (props.sortOrder === 1) {
+                        props.setSortOrder(2);
+                      } else if (props.sortOrder === 2) {
+                        props.setSortOrder(3);
+                      } else {
+                        props.setSortOrder(1);
+                      }
                       props.handleSort(value, index);
                     }}
                   >

@@ -12,6 +12,7 @@ function App() {
   const [selectedGenre, setSelectedGenre] = React.useState("All Movies");
   const [sortedMovies, setSortedMovies] = React.useState();
   const [selectSortColumn, setSelectedSortColumn] = React.useState();
+  const [sortOrder, setSortOrder] = React.useState(undefined);
   const [page, setPage] = React.useState(1);
   const [searchTerm, setSearchTerm] = React.useState();
   const [deleteId, setDeleteId] = React.useState();
@@ -46,13 +47,20 @@ function App() {
           return movie.Genre === selectedGenre ? true : false;
         });
 
-  let sortedArray = !selectSortColumn
-    ? [...tempArray]
-    : [...tempArray].sort((a, b) => {
-        if (a[selectSortColumn] > b[selectSortColumn]) {
-          return 1;
-        } else return -1;
-      });
+  let sortedArray =
+    !selectSortColumn || sortOrder === 3
+      ? [...tempArray]
+      : sortOrder === 1
+      ? [...tempArray].sort((a, b) => {
+          if (a[selectSortColumn] > b[selectSortColumn]) {
+            return 1;
+          } else return -1;
+        })
+      : [...tempArray].sort((a, b) => {
+          if (a[selectSortColumn] < b[selectSortColumn]) {
+            return 1;
+          } else return -1;
+        });
 
   const setMovieArray = useCreateMovieDispatchContext();
 
@@ -183,6 +191,8 @@ function App() {
               setSortedMovies={setSortedMovies}
               handleSort={handleSort}
               handleDelete={handleDelete}
+              setSortOrder={setSortOrder}
+              sortOrder={sortOrder}
             />
           }
         </div>
