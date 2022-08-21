@@ -12,6 +12,7 @@ export default function Table(props) {
   const [stock, setStock] = React.useState();
   const [genre, setGenre] = React.useState();
   const [rating, setRating] = React.useState();
+
   let finalContent = props.moviesData.filter((value, index) => {
     if (
       index >= props.selectedPage * 4 - 4 &&
@@ -23,6 +24,11 @@ export default function Table(props) {
     }
   });
 
+  if (props.selectedPage > numberOfButtons && props.selectedPage != 1) {
+    props.setSelectedPage((prev) => {
+      return prev - 1;
+    });
+  }
   let buttonArray = [];
 
   for (let i = 0; i < numberOfButtons; i++) {

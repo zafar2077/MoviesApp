@@ -6,7 +6,7 @@ import {
   useCreateMovieStateContext,
 } from "./contextapi/movieContext";
 import "./App.css";
-import { Button, Modal } from "bootstrap";
+import Modal from "react-modal";
 
 function App() {
   const [selectedGenre, setSelectedGenre] = React.useState("All Movies");
@@ -20,13 +20,19 @@ function App() {
   const [newGenre, setNewGenre] = React.useState("");
   const [newStock, setNewStock] = React.useState("");
   const [newRate, setNewRate] = React.useState("");
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [deleteModalIsOpen, setDeletIsOpen] = React.useState(false);
+  const [rememberUser, setRememberUser] = React.useState(false);
 
+  let subtitle;
   const handleSelectedGenre = (selectedGenre) => {
     setSelectedGenre(selectedGenre);
   };
 
+  const [checkValue, setCheckValue] = React.useState(false);
+  const [tempId, setTempId] = React.useState();
+
   const movieData = useCreateMovieStateContext();
-  const [newId, setNewId] = React.useState();
 
   const handleSort = (value) => {
     setPage(1);
@@ -65,7 +71,12 @@ function App() {
   }, [deleteId]);
 
   const handleDelete = (id) => {
-    setDeleteId(id);
+    if (rememberUser) {
+      setDeleteId(id);
+    } else {
+      openDeleteModal();
+      setTempId(id);
+    }
   };
 
   sortedArray = !searchTerm
@@ -92,20 +103,43 @@ function App() {
 
     setMovieArray(newArray);
     setAdd(false);
-    console.log(movieData.genreData);
-
-    // <Modal>
-    //   <Modal.Header closeButton>
-    //     <Modal.Title>Movie Added successfully</Modal.Title>
-    //   </Modal.Header>
-    //   <Modal.Footer>
-    //     <Button variant="secondary" onClick={() => {}}>
-    //       Close
-    //     </Button>
-    //   </Modal.Footer>
-    // </Modal>;
+    closeModal();
   };
 
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function openDeleteModal() {
+    setDeletIsOpen(true);
+  }
+
+  function closeDeleteModal() {
+    setDeletIsOpen(false);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = "#f00";
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+    },
+  };
+
+  const handleChange = (e) => {
+    setRememberUser(e.target.checked);
+  };
   return (
     <div className="appContainer">
       <h4>Showing {sortedArray.length} movies in Database</h4>
@@ -121,7 +155,7 @@ function App() {
         </span>
         <button
           onClick={() => {
-            setAdd(true);
+            openModal();
           }}
           style={{ marginLeft: "100px" }}
         >
@@ -149,7 +183,13 @@ function App() {
           }
         </div>
       </div>
-      {add ? (
+      <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
         <div className="addContainer">
           <h3>Add A Movie</h3>
 
@@ -201,6 +241,38 @@ function App() {
             Add
           </button>
         </div>
+      </Modal>
+      {!checkValue ? (
+        <Modal
+          isOpen={deleteModalIsOpen}
+          onAfterOpen={afterOpenModal}
+          onRequestClose={closeDeleteModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <div className="addModalContainer">
+            <h2>Do you really want to delete?</h2>
+            <span>
+              Remember My Choice{" "}
+              <input
+                type="checkbox"
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              ></input>
+            </span>
+            <button
+              onClick={() => {
+                closeDeleteModal();
+                setDeleteId(tempId);
+                setCheckValue(rememberUser);
+              }}
+              style={{ marginTop: "20px" }}
+            >
+              Confirm
+            </button>
+          </div>
+        </Modal>
       ) : (
         <></>
       )}

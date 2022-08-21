@@ -55,3 +55,9 @@ i {
   display: flex;
   width: 250px;
 }
+
+.addModalContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
