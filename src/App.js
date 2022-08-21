@@ -104,6 +104,10 @@ function App() {
     setMovieArray(newArray);
     setAdd(false);
     closeModal();
+    setNewTitle("");
+    setNewGenre("");
+    setNewStock("");
+    setNewRate("");
   };
 
   function openModal() {
